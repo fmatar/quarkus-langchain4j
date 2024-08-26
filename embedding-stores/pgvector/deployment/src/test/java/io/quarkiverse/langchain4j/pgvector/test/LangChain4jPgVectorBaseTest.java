@@ -1,5 +1,6 @@
 package io.quarkiverse.langchain4j.pgvector.test;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -60,7 +61,7 @@ abstract class LangChain4jPgVectorBaseTest extends EmbeddingStoreIT {
         long startTime = System.currentTimeMillis();
         Log.debugf("Start Ingesting %s embeddings", nbRows);
         IntStream.range(0, nbRows).forEachOrdered(n -> {
-            Metadata randomNameMetadata = Metadata.from("name", String.format("name_%s", new Random().nextInt(nbRows)));
+            Metadata randomNameMetadata = Metadata.from("name", String.format("name_%s", new SecureRandom().nextInt(nbRows)));
             TextSegment textSegment = TextSegment.from("matching", randomNameMetadata);
             Embedding matchingEmbedding = this.embeddingModel().embed(textSegment).content();
             this.embeddingStore().add(matchingEmbedding, textSegment);
@@ -73,7 +74,7 @@ abstract class LangChain4jPgVectorBaseTest extends EmbeddingStoreIT {
         int nbQuery = 60;
         int nbWarmUp = 10;
         IntStream.range(0, nbQuery).forEachOrdered(n -> {
-            String name = String.format("name_%s", new Random().nextInt(nbQuery));
+            String name = String.format("name_%s", new SecureRandom().nextInt(nbQuery));
             long startTime2 = System.currentTimeMillis();
             EmbeddingSearchRequest request = EmbeddingSearchRequest.builder().queryEmbedding(queryEmbedding)
                     .filter(MetadataFilterBuilder.metadataKey("name").isEqualTo(name)).maxResults(100).build();
