@@ -4,6 +4,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.MalformedURLException;
@@ -91,7 +93,7 @@ public class QuarkusHuggingFaceClientTest extends WiremockAware {
     private QuarkusHuggingFaceClientFactory.QuarkusHuggingFaceClient createClient() {
         try {
             HuggingFaceRestApi restApi = QuarkusRestClientBuilder.newBuilder()
-                    .baseUrl(new URL(resolvedWiremockUrl("/models/" + sanitizeModelForUrl(EMBED_MODEL_ID))))
+                    .baseUrl(Urls.create(resolvedWiremockUrl("/models/" + sanitizeModelForUrl(EMBED_MODEL_ID)), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS))
                     .build(HuggingFaceRestApi.class);
             return new QuarkusHuggingFaceClientFactory.QuarkusHuggingFaceClient(restApi, API_KEY);
         } catch (MalformedURLException e) {
@@ -102,7 +104,7 @@ public class QuarkusHuggingFaceClientTest extends WiremockAware {
     private QuarkusHuggingFaceClientFactory.QuarkusHuggingFaceClient createClientForChat() {
         try {
             HuggingFaceRestApi restApi = RestClientBuilder.newBuilder()
-                    .baseUrl(new URL(resolvedWiremockUrl("/models/" + sanitizeModelForUrl(CHAT_MODEL_ID))))
+                    .baseUrl(Urls.create(resolvedWiremockUrl("/models/" + sanitizeModelForUrl(CHAT_MODEL_ID)), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS))
                     .build(HuggingFaceRestApi.class);
             return new QuarkusHuggingFaceClientFactory.QuarkusHuggingFaceClient(restApi, API_KEY);
         } catch (MalformedURLException e) {

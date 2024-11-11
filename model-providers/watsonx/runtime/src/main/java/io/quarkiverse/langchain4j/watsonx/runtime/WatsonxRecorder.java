@@ -1,5 +1,7 @@
 package io.quarkiverse.langchain4j.watsonx.runtime;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static io.quarkiverse.langchain4j.runtime.OptionalUtil.firstOrDefault;
 
 import java.net.URL;
@@ -104,7 +106,7 @@ public class WatsonxRecorder {
 
             URL url;
             try {
-                url = new URL(watsonConfig.baseUrl());
+                url = Urls.create(watsonConfig.baseUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -163,7 +165,7 @@ public class WatsonxRecorder {
 
         URL url;
         try {
-            url = new URL(watsonConfig.baseUrl());
+            url = Urls.create(watsonConfig.baseUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
