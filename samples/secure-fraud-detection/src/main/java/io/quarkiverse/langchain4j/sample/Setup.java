@@ -1,5 +1,6 @@
 package io.quarkiverse.langchain4j.sample;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +19,7 @@ public class Setup {
             "Montpellier", "Nime", "Arles", "Nice", "Cannes");
 
     public static String getARandomCity() {
-        return CITIES.get(new Random().nextInt(CITIES.size()));
+        return CITIES.get(new SecureRandom().nextInt(CITIES.size()));
     }
 
     @Inject
@@ -27,7 +28,7 @@ public class Setup {
     @Transactional
     public void init(@Observes StartupEvent ev, CustomerRepository customers, TransactionRepository transactions) {
         customers.deleteAll();
-        Random random = new Random();
+        Random random = new SecureRandom();
 
         var customer = new Customer();
         customer.name = config.name();
